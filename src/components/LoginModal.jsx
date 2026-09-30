@@ -16,7 +16,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }) {
     // Admin login validation (default admin: admin / admin123 or admin@admin.com)
     if (
       (email.trim().toLowerCase() === 'admin' || email.trim().toLowerCase() === 'admin@admin.com') &&
-      password === 'admin123'
+      password === 'Legado@2031'
     ) {
       setTimeout(() => {
         onLogin({ email: 'admin@agendapro.com', role: 'admin' })
@@ -95,7 +95,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }) {
                 required
               />
               <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', marginTop: 4, display: 'block' }}>
-                Senha padrão para testes: <strong>admin123</strong>
+                Senha padrão para testes: <strong>naosei</strong>
               </span>
             </div>
           </div>
