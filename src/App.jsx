@@ -132,9 +132,24 @@ export default function App() {
 
   // Filter displayed appointments by search term
   const filteredAppointments = useMemo(() => {
-    if (!searchTerm.trim()) return agendaAppointments
+    let list = agendaAppointments
+    
+    // Hide past appointments from common users
+    if (!isAdmin) {
+      const now = new Date()
+      const todayStr = format(now, 'yyyy-MM-dd')
+      const currentTimeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
+      
+      list = list.filter((a) => {
+        if (a.date < todayStr) return false
+        if (a.date === todayStr && a.time < currentTimeStr) return false
+        return true
+      })
+    }
+
+    if (!searchTerm.trim()) return list
     const term = searchTerm.toLowerCase()
-    return agendaAppointments.filter(
+    return list.filter(
       (a) =>
         a.cliente?.toLowerCase().includes(term) ||
         a.corretor?.toLowerCase().includes(term) ||
@@ -144,7 +159,7 @@ export default function App() {
         a.telefone?.includes(term) ||
         a.date?.includes(term)
     )
-  }, [agendaAppointments, searchTerm])
+  }, [agendaAppointments, searchTerm, isAdmin])
 
   // Create appointment
   const handleCreateAppointment = async (data) => {
@@ -345,6 +360,7 @@ export default function App() {
                 onSelectTime={setSelectedTime}
                 appointments={dateAppointments}
                 selectedDate={selectedDate}
+                isAdmin={isAdmin}
               />
             </div>
           </div>

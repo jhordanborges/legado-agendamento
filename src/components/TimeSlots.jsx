@@ -36,8 +36,25 @@ export function getEndTimeSlot(timeStr) {
 
 const MAX_PER_SLOT = 1
 
-export default function TimeSlots({ selectedDate, selectedTime, onSelectTime, appointments }) {
-  const availableSlots = useMemo(() => getTimeSlotsForDate(selectedDate), [selectedDate])
+export default function TimeSlots({ selectedDate, selectedTime, onSelectTime, appointments, isAdmin }) {
+  const availableSlots = useMemo(() => {
+    const slots = getTimeSlotsForDate(selectedDate)
+    if (isAdmin || !selectedDate) return slots
+
+    const now = new Date()
+    const todayAtMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    
+    // Past days: no slots for common user
+    if (selectedDate < todayAtMidnight) return []
+
+    // Today: filter out past times
+    if (selectedDate.toDateString() === now.toDateString()) {
+      const currentTimeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
+      return slots.filter((slot) => slot >= currentTimeStr)
+    }
+
+    return slots
+  }, [selectedDate, isAdmin])
 
   const slotCounts = useMemo(() => {
     const counts = {}
