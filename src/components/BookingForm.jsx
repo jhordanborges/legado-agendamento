@@ -13,8 +13,8 @@ const INITIAL_FORM = {
 }
 
 const AGENDAS = [
-  { id: 'zona-sul', label: '🏙️ Zona Sul' },
-  { id: 'santa-monica', label: '🌴 Santa Mônica' },
+  { id: 'zona-sul', label: '🏙️ Zona Sul', agenciaLabel: 'Zona Sul' },
+  { id: 'santa-monica', label: '🌴 Santa Mônica', agenciaLabel: 'Santa Mônica' },
 ]
 
 export default function BookingForm({ selectedDate, selectedTime, onSubmit, onAgendaChange, disabled }) {
@@ -58,6 +58,7 @@ export default function BookingForm({ selectedDate, selectedTime, onSubmit, onAg
 
     setLoading(true)
     try {
+      const agendaInfo = AGENDAS.find((a) => a.id === form.agenda)
       await onSubmit({
         date: format(selectedDate, 'yyyy-MM-dd'),
         time: selectedTime,
@@ -66,6 +67,7 @@ export default function BookingForm({ selectedDate, selectedTime, onSubmit, onAg
         gerente: form.gerente.trim(),
         cliente: form.cliente.trim(),
         telefone: form.telefone.trim(),
+        agencia: agendaInfo?.agenciaLabel ?? form.agenda,
       })
       setForm(INITIAL_FORM)
       onAgendaChange?.('')
