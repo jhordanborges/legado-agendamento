@@ -15,6 +15,7 @@ import {
 } from 'react-icons/fi'
 
 import { supabase } from './lib/supabase'
+import { dispararWebhook } from './lib/webhook'
 import Calendar from './components/Calendar'
 import TimeSlots from './components/TimeSlots'
 import BookingForm from './components/BookingForm'
@@ -171,8 +172,15 @@ export default function App() {
       throw new Error('Este horário já foi reservado para esta agenda.')
     }
 
-    const { error } = await supabase.from('agendamentos').insert([data])
+    const { data: inserted, error } = await supabase
+      .from('agendamentos')
+      .insert([data])
+      .select()
+      .single()
     if (error) throw error
+
+    // Dispara webhook com todos os dados do agendamento
+    await dispararWebhook(inserted)
 
     await fetchAppointments()
     setSelectedTime(null)
