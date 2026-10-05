@@ -695,57 +695,42 @@ select.form-input option {
   padding: 8px;
 }
 
-/* Agenda Select - wrapper com cor dinâmica */
+/* Agenda Select - dropdown com cor dinâmica */
 .agenda-select-wrapper {
   position: relative;
 }
 
-.agenda-select-wrapper::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius-md);
-  pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
-  z-index: 1;
+.agenda-select {
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease,
+    box-shadow 0.25s ease, color 0.25s ease;
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
 }
 
 /* Zona Sul — roxo/indigo */
-.agenda-select-wrapper[data-agenda="zona-sul"]::before {
-  border-color: rgba(99, 102, 241, 0.55);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1), inset 0 1px 0 rgba(99, 102, 241, 0.1);
+.agenda-select-wrapper[data-agenda="zona-sul"] .agenda-select,
+.agenda-select-wrapper[data-agenda="zona-sul"] .agenda-select:focus {
+  background-color: rgba(99, 102, 241, 0.08) !important;
+  border-color: rgba(99, 102, 241, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12) !important;
+  color: #a5b4fc !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a5b4fc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
 }
 
 /* Santa Mônica — verde esmeralda */
-.agenda-select-wrapper[data-agenda="santa-monica"]::before {
-  border-color: rgba(16, 185, 129, 0.55);
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1), inset 0 1px 0 rgba(16, 185, 129, 0.1);
-}
-
-.agenda-select {
-  position: relative;
-  font-size: 0.95rem;
-  font-weight: 500;
-  border: none !important;
-  box-shadow: none !important;
-  transition: background 0.25s ease, color 0.25s ease;
-}
-
-.agenda-select-wrapper[data-agenda="zona-sul"] .agenda-select {
-  background: rgba(99, 102, 241, 0.08);
-  color: #a5b4fc;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a5b4fc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-}
-
-.agenda-select-wrapper[data-agenda="santa-monica"] .agenda-select {
-  background: rgba(16, 185, 129, 0.08);
-  color: #34d399;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-}
-
-.agenda-select:focus {
-  outline: none;
+.agenda-select-wrapper[data-agenda="santa-monica"] .agenda-select,
+.agenda-select-wrapper[data-agenda="santa-monica"] .agenda-select:focus {
+  background-color: rgba(16, 185, 129, 0.08) !important;
+  border-color: rgba(16, 185, 129, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12) !important;
+  color: #34d399 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
 }
 
 
