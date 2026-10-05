@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { FiCalendar, FiClock, FiUser, FiPhone, FiBriefcase, FiUserCheck, FiMapPin } from 'react-icons/fi'
+import { FiCalendar, FiClock, FiUser, FiPhone, FiUserCheck, FiMapPin, FiChevronDown } from 'react-icons/fi'
 import toast from 'react-hot-toast'
 
 const INITIAL_FORM = {
@@ -116,6 +116,9 @@ export default function BookingForm({ selectedDate, selectedTime, onSubmit, onAg
               <option key={ag.id} value={ag.id}>{ag.label}</option>
             ))}
           </select>
+          <span className="agenda-select-chevron">
+            <FiChevronDown />
+          </span>
         </div>
       </div>
 

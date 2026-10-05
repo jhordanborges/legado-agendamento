@@ -703,14 +703,27 @@ select.form-input option {
 .agenda-select {
   appearance: none;
   -webkit-appearance: none;
+  background-image: none !important; /* zera a seta do CSS base */
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.25s ease, border-color 0.25s ease,
+  padding-right: 40px;
+  transition: background-color 0.25s ease, border-color 0.25s ease,
     box-shadow 0.25s ease, color 0.25s ease;
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 36px;
+}
+
+/* Ícone de seta real (DOM), posicionado sobre o select */
+.agenda-select-chevron {
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.25s ease;
 }
 
 /* Zona Sul — roxo/indigo */
@@ -720,7 +733,10 @@ select.form-input option {
   border-color: rgba(99, 102, 241, 0.6) !important;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12) !important;
   color: #a5b4fc !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a5b4fc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+}
+
+.agenda-select-wrapper[data-agenda="zona-sul"] .agenda-select-chevron {
+  color: #a5b4fc;
 }
 
 /* Santa Mônica — verde esmeralda */
@@ -730,7 +746,10 @@ select.form-input option {
   border-color: rgba(16, 185, 129, 0.6) !important;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12) !important;
   color: #34d399 !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+}
+
+.agenda-select-wrapper[data-agenda="santa-monica"] .agenda-select-chevron {
+  color: #34d399;
 }
 
 
