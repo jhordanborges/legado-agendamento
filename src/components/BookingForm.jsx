@@ -5,20 +5,30 @@ import { FiCalendar, FiClock, FiUser, FiPhone, FiBriefcase, FiUserCheck, FiMapPi
 import toast from 'react-hot-toast'
 
 const INITIAL_FORM = {
+  agenda: '',
   corretor: '',
   gerente: '',
   cliente: '',
   telefone: '',
-  agencia: '',
 }
 
-export default function BookingForm({ selectedDate, selectedTime, agenda, onSubmit, disabled }) {
+const AGENDAS = [
+  { id: 'zona-sul', label: 'Zona Sul', icon: '🏙️', color: 'var(--primary-400)', bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.4)' },
+  { id: 'santa-monica', label: 'Santa Mônica', icon: '🌴', color: '#34d399', bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.4)' },
+]
+
+export default function BookingForm({ selectedDate, selectedTime, onSubmit, onAgendaChange, disabled }) {
   const [form, setForm] = useState(INITIAL_FORM)
   const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setForm((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleAgendaSelect = (agendaId) => {
+    setForm((prev) => ({ ...prev, agenda: agendaId }))
+    onAgendaChange?.(agendaId)
   }
 
   const formatPhone = (value) => {
@@ -34,13 +44,13 @@ export default function BookingForm({ selectedDate, selectedTime, agenda, onSubm
   }
 
   const isValid =
+    form.agenda &&
     selectedDate &&
     selectedTime &&
     form.corretor.trim() &&
     form.gerente.trim() &&
     form.cliente.trim() &&
-    form.telefone.trim() &&
-    form.agencia.trim()
+    form.telefone.trim()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -51,14 +61,14 @@ export default function BookingForm({ selectedDate, selectedTime, agenda, onSubm
       await onSubmit({
         date: format(selectedDate, 'yyyy-MM-dd'),
         time: selectedTime,
-        agenda,
+        agenda: form.agenda,
         corretor: form.corretor.trim(),
         gerente: form.gerente.trim(),
         cliente: form.cliente.trim(),
         telefone: form.telefone.trim(),
-        agencia: form.agencia.trim(),
       })
       setForm(INITIAL_FORM)
+      onAgendaChange?.('')
       toast.success('Agendamento criado com sucesso!', {
         style: {
           background: 'rgba(30, 27, 60, 0.95)',
@@ -90,7 +100,31 @@ export default function BookingForm({ selectedDate, selectedTime, agenda, onSubm
         Novo Agendamento
       </div>
 
-      {selectedDate && selectedTime && (
+      {/* Seletor de Agenda */}
+      <div className="form-group">
+        <label className="form-label">Selecione a Agenda</label>
+        <div className="agenda-selector">
+          {AGENDAS.map((ag) => (
+            <button
+              key={ag.id}
+              type="button"
+              className={`agenda-option ${form.agenda === ag.id ? 'active' : ''}`}
+              style={form.agenda === ag.id ? {
+                '--option-color': ag.color,
+                '--option-bg': ag.bg,
+                '--option-border': ag.border,
+              } : {}}
+              onClick={() => handleAgendaSelect(ag.id)}
+              disabled={disabled || loading}
+            >
+              <span className="agenda-option-icon">{ag.icon}</span>
+              <span className="agenda-option-label">{ag.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {selectedDate && selectedTime && form.agenda && (
         <div className="form-selected-info">
           <span className="info-chip">
             <FiCalendar />
@@ -102,7 +136,7 @@ export default function BookingForm({ selectedDate, selectedTime, agenda, onSubm
           </span>
           <span className="info-chip">
             <FiMapPin />
-            {agenda === 'zona-sul' ? 'Zona Sul' : 'Santa Mônica'}
+            {form.agenda === 'zona-sul' ? 'Zona Sul' : 'Santa Mônica'}
           </span>
         </div>
       )}
@@ -155,38 +189,20 @@ export default function BookingForm({ selectedDate, selectedTime, agenda, onSubm
         />
       </div>
 
-      <div className="form-row">
-        <div className="form-group">
-          <label className="form-label" htmlFor="telefone">
-            Telefone do Cliente
-          </label>
-          <input
-            id="telefone"
-            className="form-input"
-            type="tel"
-            name="telefone"
-            value={form.telefone}
-            onChange={handlePhoneChange}
-            placeholder="(00) 00000-0000"
-            disabled={disabled || loading}
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="form-label" htmlFor="agencia">
-            Agência da Equipe
-          </label>
-          <input
-            id="agencia"
-            className="form-input"
-            type="text"
-            name="agencia"
-            value={form.agencia}
-            onChange={handleChange}
-            placeholder="Nome da agência"
-            disabled={disabled || loading}
-          />
-        </div>
+      <div className="form-group">
+        <label className="form-label" htmlFor="telefone">
+          Telefone do Cliente
+        </label>
+        <input
+          id="telefone"
+          className="form-input"
+          type="tel"
+          name="telefone"
+          value={form.telefone}
+          onChange={handlePhoneChange}
+          placeholder="(00) 00000-0000"
+          disabled={disabled || loading}
+        />
       </div>
 
       <button

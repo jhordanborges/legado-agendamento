@@ -27,10 +27,7 @@ import StatsBar from './components/StatsBar'
 
 import './App.css'
 
-const AGENDAS = [
-  { id: 'zona-sul', label: 'Zona Sul', icon: '🏙️' },
-  { id: 'santa-monica', label: 'Santa Mônica', icon: '🌴' },
-]
+
 
 // Helper to pick default open date (skip Sunday/Monday)
 function getInitialOpenDate() {
@@ -118,9 +115,9 @@ export default function App() {
     })
   }
 
-  // Filter appointments for current agenda
+  // Appointments for calendar/time slots (filtrados pela agenda selecionada no form)
   const agendaAppointments = useMemo(
-    () => appointments.filter((a) => a.agenda === currentAgenda),
+    () => (currentAgenda ? appointments.filter((a) => a.agenda === currentAgenda) : []),
     [appointments, currentAgenda]
   )
 
@@ -131,9 +128,9 @@ export default function App() {
     return agendaAppointments.filter((a) => a.date === dateStr)
   }, [agendaAppointments, selectedDate])
 
-  // Filter displayed appointments by search term
+  // Lista unificada (todas as agendas) com filtro de busca
   const filteredAppointments = useMemo(() => {
-    let list = agendaAppointments
+    let list = appointments
     
     // Hide past appointments from common users
     if (!isAdmin) {
@@ -155,12 +152,11 @@ export default function App() {
         a.cliente?.toLowerCase().includes(term) ||
         a.corretor?.toLowerCase().includes(term) ||
         a.gerente?.toLowerCase().includes(term) ||
-        a.agencia?.toLowerCase().includes(term) ||
         a.diretor?.toLowerCase().includes(term) ||
         a.telefone?.includes(term) ||
         a.date?.includes(term)
     )
-  }, [agendaAppointments, searchTerm, isAdmin])
+  }, [appointments, searchTerm, isAdmin])
 
   // Create appointment
   const handleCreateAppointment = async (data) => {
@@ -184,6 +180,7 @@ export default function App() {
 
     await fetchAppointments()
     setSelectedTime(null)
+    setCurrentAgenda('')
   }
 
   // Delete appointment (Admin only)
@@ -321,28 +318,6 @@ export default function App() {
         {/* Stats Bar */}
         {isAdmin && <StatsBar appointments={appointments} />}
 
-        {/* Agenda Tabs */}
-        <div className="agenda-tabs">
-          {AGENDAS.map((agenda) => (
-            <button
-              key={agenda.id}
-              className={`agenda-tab ${currentAgenda === agenda.id ? 'active' : ''} ${agenda.id === 'santa-monica' ? 'santa-monica' : ''}`}
-              onClick={() => {
-                setCurrentAgenda(agenda.id)
-                setSelectedDate(getInitialOpenDate())
-                setSelectedTime(null)
-              }}
-            >
-              <span className="tab-icon">{agenda.icon}</span>
-              {agenda.label}
-              {isAdmin && (
-                <span className="tab-badge">
-                  {appointments.filter((a) => a.agenda === agenda.id).length}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
 
         {/* Content Grid */}
         <div className="content-grid">
@@ -380,16 +355,18 @@ export default function App() {
                 <span className="card-header-icon" style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#34d399' }}>
                   <FiMapPin />
                 </span>
-                {currentAgenda === 'zona-sul' ? 'Agenda Zona Sul' : 'Agenda Santa Mônica'}
+                Novo Agendamento
               </div>
             </div>
             <div className="card-body">
               <BookingForm
                 selectedDate={selectedDate}
                 selectedTime={selectedTime}
-                agenda={currentAgenda}
                 onSubmit={handleCreateAppointment}
-                isAdmin={isAdmin}
+                onAgendaChange={(agenda) => {
+                  setCurrentAgenda(agenda)
+                  setSelectedTime(null)
+                }}
               />
             </div>
           </div>
@@ -400,7 +377,7 @@ export default function App() {
           <div className="appointments-header">
             <div className="appointments-title">
               <FiList />
-              Agendamentos Registrados — {currentAgenda === 'zona-sul' ? 'Zona Sul' : 'Santa Mônica'}
+              Todos os Agendamentos
               <span className="appointments-count">{filteredAppointments.length}</span>
             </div>
 

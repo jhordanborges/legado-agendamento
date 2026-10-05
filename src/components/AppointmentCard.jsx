@@ -1,9 +1,13 @@
-import { FiTrash2, FiUser, FiPhone, FiBriefcase, FiUserCheck, FiLock, FiAward } from 'react-icons/fi'
+import { FiTrash2, FiUser, FiPhone, FiUserCheck, FiLock, FiAward } from 'react-icons/fi'
 import { getEndTimeSlot } from './TimeSlots'
 
 export default function AppointmentCard({ appointment, onDelete, onAssignDirector, isAdmin }) {
-  const { time, agenda, corretor, gerente, cliente, telefone, agencia, diretor } = appointment
+  const { id, time, date, agenda, corretor, gerente, cliente, telefone, diretor } = appointment
   const endTime = getEndTimeSlot(time)
+  const agendaLabel = agenda === 'zona-sul' ? '🏙️ Zona Sul' : '🌴 Santa Mônica'
+  const agendaColor = agenda === 'zona-sul'
+    ? { color: 'var(--primary-300)', border: 'rgba(99,102,241,0.25)', bg: 'rgba(99,102,241,0.1)' }
+    : { color: '#34d399', border: 'rgba(16,185,129,0.25)', bg: 'rgba(16,185,129,0.1)' }
 
   return (
     <div className="appointment-card">
@@ -12,6 +16,23 @@ export default function AppointmentCard({ appointment, onDelete, onAssignDirecto
         <div className="appointment-time">
           <span className="appointment-time-value">{time}</span>
           <span className="appointment-time-label">até {endTime}</span>
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+              padding: '2px 10px',
+              borderRadius: 'var(--radius-full)',
+              fontSize: '0.7rem',
+              fontWeight: 600,
+              color: agendaColor.color,
+              background: agendaColor.bg,
+              border: `1px solid ${agendaColor.border}`,
+              marginTop: 6,
+            }}
+          >
+            {agendaLabel}
+          </span>
         </div>
 
         <div className="appointment-details">
@@ -27,9 +48,6 @@ export default function AppointmentCard({ appointment, onDelete, onAssignDirecto
                 </span>
                 <span className="appointment-meta-item">
                   <FiPhone /> {telefone}
-                </span>
-                <span className="appointment-meta-item">
-                  <FiBriefcase /> {agencia}
                 </span>
                 {diretor && (
                   <span className="appointment-meta-item" style={{ color: 'var(--warning-400)', fontWeight: 600 }}>
