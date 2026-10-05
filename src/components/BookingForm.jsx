@@ -13,8 +13,8 @@ const INITIAL_FORM = {
 }
 
 const AGENDAS = [
-  { id: 'zona-sul', label: 'Zona Sul', icon: '🏙️', color: 'var(--primary-400)', bg: 'rgba(99, 102, 241, 0.15)', border: 'rgba(99, 102, 241, 0.4)' },
-  { id: 'santa-monica', label: 'Santa Mônica', icon: '🌴', color: '#34d399', bg: 'rgba(16, 185, 129, 0.15)', border: 'rgba(16, 185, 129, 0.4)' },
+  { id: 'zona-sul', label: '🏙️ Zona Sul' },
+  { id: 'santa-monica', label: '🌴 Santa Mônica' },
 ]
 
 export default function BookingForm({ selectedDate, selectedTime, onSubmit, onAgendaChange, disabled }) {
@@ -100,27 +100,22 @@ export default function BookingForm({ selectedDate, selectedTime, onSubmit, onAg
         Novo Agendamento
       </div>
 
-      {/* Seletor de Agenda */}
+      {/* Seletor de Agenda - Dropdown */}
       <div className="form-group">
-        <label className="form-label">Selecione a Agenda</label>
-        <div className="agenda-selector">
-          {AGENDAS.map((ag) => (
-            <button
-              key={ag.id}
-              type="button"
-              className={`agenda-option ${form.agenda === ag.id ? 'active' : ''}`}
-              style={form.agenda === ag.id ? {
-                '--option-color': ag.color,
-                '--option-bg': ag.bg,
-                '--option-border': ag.border,
-              } : {}}
-              onClick={() => handleAgendaSelect(ag.id)}
-              disabled={disabled || loading}
-            >
-              <span className="agenda-option-icon">{ag.icon}</span>
-              <span className="agenda-option-label">{ag.label}</span>
-            </button>
-          ))}
+        <label className="form-label" htmlFor="agenda-select">Agenda</label>
+        <div className="agenda-select-wrapper" data-agenda={form.agenda}>
+          <select
+            id="agenda-select"
+            className="form-input agenda-select"
+            value={form.agenda}
+            onChange={(e) => handleAgendaSelect(e.target.value)}
+            disabled={disabled || loading}
+          >
+            <option value="" disabled>Selecione a agenda...</option>
+            {AGENDAS.map((ag) => (
+              <option key={ag.id} value={ag.id}>{ag.label}</option>
+            ))}
+          </select>
         </div>
       </div>
 
