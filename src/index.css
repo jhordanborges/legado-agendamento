@@ -988,6 +988,153 @@ select.form-input option {
   color: var(--danger-400);
 }
 
+/* ===================== DATE GROUPING ===================== */
+.appointments-by-date {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.date-group-past {
+  opacity: 0.72;
+}
+
+.date-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(8px);
+  gap: 12px;
+}
+
+.date-group-header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.date-group-day {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: white;
+  text-transform: capitalize;
+}
+
+.date-group-full {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.date-group-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.date-group-count {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.35);
+  white-space: nowrap;
+}
+
+.date-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.date-badge.today {
+  background: rgba(99, 102, 241, 0.18);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  color: var(--primary-300);
+}
+
+.date-badge.tomorrow {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--success-400);
+}
+
+.date-badge.past {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ===================== APPOINTMENT DATE BLOCK ===================== */
+.appointment-date-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  margin-bottom: 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  width: 100%;
+}
+
+.appointment-date-day {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: capitalize;
+  letter-spacing: 0.04em;
+}
+
+.appointment-date-value {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+}
+
+.appointment-time-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.appointment-time-sep {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.appointment-concluded-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--success-400);
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  margin-top: 4px;
+}
+
+.appointment-card.concluded .appointment-accent {
+  opacity: 0.45;
+}
+
 /* ===================== EMPTY STATE ===================== */
 .empty-state {
   display: flex;

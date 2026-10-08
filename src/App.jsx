@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
-import { format, getDay, addDays } from 'date-fns'
+import { format, getDay, addDays, parseISO, isToday, isTomorrow, isPast, isFuture } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Toaster } from 'react-hot-toast'
 import toast from 'react-hot-toast'
@@ -447,16 +447,59 @@ export default function App() {
               <div className="loading-spinner" style={{ width: 40, height: 40 }} />
             </div>
           ) : filteredAppointments.length > 0 ? (
-            <div className="appointments-grid">
-              {filteredAppointments.map((appt) => (
-                <AppointmentCard
-                  key={appt.id}
-                  appointment={appt}
-                  onDelete={setDeleteTarget}
-                  onAssignDirector={setAssignDirectorTarget}
-                  isAdmin={isAdmin}
-                />
-              ))}
+            <div className="appointments-by-date">
+              {(() => {
+                // Group by date
+                const groups = filteredAppointments.reduce((acc, appt) => {
+                  const key = appt.date || 'sem-data'
+                  if (!acc[key]) acc[key] = []
+                  acc[key].push(appt)
+                  return acc
+                }, {})
+
+                return Object.entries(groups).map(([dateKey, appts]) => {
+                  const parsedDate = dateKey !== 'sem-data' ? parseISO(dateKey) : null
+                  const dayLabel = parsedDate
+                    ? format(parsedDate, "EEEE", { locale: ptBR })
+                    : ''
+                  const fullDate = parsedDate
+                    ? format(parsedDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
+                    : 'Sem data'
+
+                  const isDateToday = parsedDate && isToday(parsedDate)
+                  const isDateTomorrow = parsedDate && isTomorrow(parsedDate)
+                  const isDatePast = parsedDate && isPast(parsedDate) && !isDateToday
+
+                  const badge = isDateToday ? 'Hoje' : isDateTomorrow ? 'Amanhã' : isDatePast ? 'Concluído' : null
+                  const badgeClass = isDateToday ? 'date-badge today' : isDateTomorrow ? 'date-badge tomorrow' : isDatePast ? 'date-badge past' : ''
+
+                  return (
+                    <div key={dateKey} className={`date-group${isDatePast ? ' date-group-past' : ''}`}>
+                      <div className="date-group-header">
+                        <div className="date-group-header-left">
+                          <span className="date-group-day">{dayLabel}</span>
+                          <span className="date-group-full">{fullDate}</span>
+                        </div>
+                        <div className="date-group-header-right">
+                          {badge && <span className={badgeClass}>{badge}</span>}
+                          <span className="date-group-count">{appts.length} agendamento{appts.length !== 1 ? 's' : ''}</span>
+                        </div>
+                      </div>
+                      <div className="appointments-grid">
+                        {appts.map((appt) => (
+                          <AppointmentCard
+                            key={appt.id}
+                            appointment={appt}
+                            onDelete={setDeleteTarget}
+                            onAssignDirector={setAssignDirectorTarget}
+                            isAdmin={isAdmin}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )
+                })
+              })()}
             </div>
           ) : (
             <div className="glass-card">
