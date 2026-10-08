@@ -175,8 +175,37 @@ export default function App() {
       .single()
     if (error) throw error
 
-    // Dispara webhook com todos os dados do agendamento
-    await dispararWebhook(inserted)
+    // Dispara webhook com retry automático (até 3 tentativas)
+    const webhookResult = await dispararWebhook(inserted)
+
+    // Persiste o status do webhook no registro do agendamento
+    const webhookStatus = webhookResult.ok
+      ? 'ok'
+      : `falha (${webhookResult.attempts} tentativas): ${webhookResult.error}`
+
+    await supabase
+      .from('agendamentos')
+      .update({ webhook_status: webhookStatus })
+      .eq('id', inserted.id)
+
+    // Notifica o admin visualmente se o webhook falhou
+    if (!webhookResult.ok) {
+      toast.error(
+        `⚠️ Agendamento salvo, mas o webhook falhou após ${webhookResult.attempts} tentativas.\nO time pode não ter sido notificado automaticamente.`,
+        {
+          duration: 8000,
+          style: {
+            background: 'rgba(30, 27, 60, 0.97)',
+            color: '#fff',
+            border: '1px solid rgba(239, 68, 68, 0.5)',
+            backdropFilter: 'blur(20px)',
+            maxWidth: '420px',
+            lineHeight: '1.5',
+          },
+          iconTheme: { primary: '#f87171', secondary: '#fff' },
+        }
+      )
+    }
 
     await fetchAppointments()
     setSelectedTime(null)

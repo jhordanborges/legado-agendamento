@@ -15,11 +15,13 @@ CREATE TABLE IF NOT EXISTS agendamentos (
   telefone TEXT NOT NULL,       -- Telefone do cliente
   agencia TEXT NOT NULL,        -- Agência da equipe
   diretor TEXT,                 -- Diretor responsável pelo atendimento (opcional)
+  webhook_status TEXT,          -- Status do último disparo: 'ok' ou 'falha (N tentativas): <erro>'
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Se a tabela já existir, adicionar coluna diretor
+-- Se a tabela já existir, adicionar colunas ausentes
 ALTER TABLE agendamentos ADD COLUMN IF NOT EXISTS diretor TEXT;
+ALTER TABLE agendamentos ADD COLUMN IF NOT EXISTS webhook_status TEXT;
 
 
 -- Índices para performance
